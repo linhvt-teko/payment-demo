@@ -12,9 +12,9 @@ import UIKit
 
 class SplashModule: SplashBuilderProtocol {
 
-    static func build() -> UIViewController {
+    static func build(dismissHandler: @escaping () -> Void) -> UIViewController {
         let view = SplashViewController(nibName: "SplashViewController", bundle: nil)
-        let presenter = SplashPresenter(view: view)
+        let presenter = SplashPresenter(view: view, dismissHandler: dismissHandler)
         
         view.presenter = presenter
         
@@ -22,8 +22,8 @@ class SplashModule: SplashBuilderProtocol {
     }
     
     
-    static func show(onViewController viewController: UIViewController) {
-        let vc = SplashModule.build()
+    static func show(onViewController viewController: UIViewController, dismissHandler: @escaping () -> Void) {
+        let vc = SplashModule.build(dismissHandler: dismissHandler)
         vc.modalPresentationStyle = .fullScreen
         viewController.present(vc, animated: true, completion: nil)
     }

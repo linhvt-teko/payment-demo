@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>TerraClientID</key>
-	<string>paymentsdk:ios:appstore:1.0.2</string>
+	<string>paymentsdk:ios:appstore:2.0.0</string>
 	<key>TerraEnvironment</key>
-	<string>staging</string>
+	<string>dev</string>
 </dict>
 </plist>

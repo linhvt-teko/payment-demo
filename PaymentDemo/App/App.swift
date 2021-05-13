@@ -11,6 +11,11 @@ import Terra
 import MinervaUI
 import TerraInstancesManager
 import Toast_Swift
+import ApolloTheme
+import LoyaltyCore
+import Janus
+import IQKeyboardManagerSwift
+import JanusGoogle
 
 public var terraApp: ITerraApp = TerraInstanceCenter.shared.terraApp
 
@@ -18,9 +23,13 @@ public class TerraInstanceCenter {
     
     public static let shared = TerraInstanceCenter()
 
-    var terraApp: ITerraApp!
+    var tempTerraApp: ITerraApp?
     
-    var isTerraLoaded: Bool { return terraApp != nil }
+    var terraApp: ITerraApp! {
+        return tempTerraApp!
+    }
+    
+    var isTerraLoaded: Bool { return tempTerraApp != nil }
     
     func loadTerra(completion: @escaping (Bool) -> Void) {
         TerraApp.configure(appName: "MinervaDemo") { (isSuccess, terraApp) in
@@ -28,8 +37,12 @@ public class TerraInstanceCenter {
                 completion(false)
                 return
             }
-            TerraInstanceCenter.shared.terraApp = terraApp
-//            TerraPaymentUI.configureWith(app: terraApp)
+            TerraInstanceCenter.shared.tempTerraApp = terraApp
+            TerraPaymentUI.configureWith(app: terraApp)
+            TerraTheme.configureWith(app: terraApp)
+            TerraLoyalty.configureWith(app: terraApp)
+            TerraAuth.configureWith(app: terraApp)
+            TerraAuth.auth(app: terraApp).registerGoogle()
             print(terraApp.bus.id)
             UserDefaults.standard.setValue(terraApp.bus.id, forKey: "vn.teko.terra.bus.app-host")
             completion(isSuccess)
@@ -48,7 +61,7 @@ class App {
     func setupTools() {
         // custom initialization
         setupToasts()
-//        setupIQKeyboardManager()
+        setupIQKeyboardManager()
     }
     
     func attachWindow(_ window: UIWindow) {
@@ -57,14 +70,10 @@ class App {
     }
     
     func buildRootViewController() {
-        let testVC = MainViewController(nibName: "MainViewController", bundle: nil)
-//        let testVC = PaymentWithLoyaltyViewController(nibName: "PaymentWithLoyaltyViewController", bundle: nil)
+        let testVC = PaymentWithLoyaltyViewController(nibName: "PaymentWithLoyaltyViewController", bundle: nil)
         let navVC = UINavigationController(rootViewController: testVC)
         window?.rootViewController = navVC
         window?.makeKeyAndVisible()
-        TerraInstanceCenter.shared.loadTerra { (isSuccess) in
-//            TerraJanus.configureWith(app: terraApp, for: self.application, launchOptions: self.launchOptions)
-        }
     }
 
     
@@ -73,7 +82,7 @@ class App {
         self.application = application
         self.launchOptions = launchOptions
         buildRootViewController()
-        
+        setupTools()
     }
 
 }
@@ -87,11 +96,9 @@ extension App {
         ToastManager.shared.isQueueEnabled = true
     }
     
-//    private func setupIQKeyboardManager() {
-//        // for IQKeyboardManager
-//        IQKeyboardManager.shared.enable = true
-//        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
-//        IQKeyboardManager.shared.toolbarDoneBarButtonItemText = "done".localized()
-//        IQKeyboardManager.shared.disabledToolbarClasses = [CouponSelectionViewController.self]
-//    }
+    private func setupIQKeyboardManager() {
+        // for IQKeyboardManager
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.shouldShowToolbarPlaceholder = false
+    }
 }

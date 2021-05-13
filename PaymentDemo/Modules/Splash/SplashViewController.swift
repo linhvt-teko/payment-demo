@@ -23,6 +23,9 @@ class SplashViewController: BaseViewController {
 	override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.viewDidLoad()
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.isNavigationBarHidden = false
+
     }
 
     // MARK: - setup

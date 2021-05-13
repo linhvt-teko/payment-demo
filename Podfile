@@ -43,15 +43,25 @@ post_install do |installer|
   end
 end
 
+def janusPods
+  pod 'Janus', '~> 3.2.1', source: $TekoSpecs
+  pod 'JanusFacebook', '~> 3.2.3', source: $TekoSpecs
+  pod 'JanusGoogle', '~> 3.2.3', source: $TekoSpecs
+
+end
+
+
 target 'PaymentDemo' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
   # Pods for PaymentDemo
-  pod 'Terra', '~> 2.5.2', source: $TekoSpecs
-  pod 'MinervaUI', '~> 3.7.1', source: $TekoSpecs
+  pod 'Terra', '~> 2.5.3', source: $TekoSpecs
+  pod 'MinervaUI', '~> 3.8.2', source: $TekoSpecs
+  janusPods
   pod 'DropDown'
-  
+  pod 'IQKeyboardManagerSwift'
+
 
   target 'PaymentDemoTests' do
     inherit! :search_paths

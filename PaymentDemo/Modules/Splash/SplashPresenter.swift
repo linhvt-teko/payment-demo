@@ -14,9 +14,11 @@ import MinervaUI
 class SplashPresenter: SplashPresenterProtocol {
 
     weak private var view: SplashViewProtocol?
-
-    init(view: SplashViewProtocol) {
+    var dismissHandler: (() -> Void)?
+    
+    init(view: SplashViewProtocol, dismissHandler: @escaping () -> Void) {
         self.view = view
+        self.dismissHandler = dismissHandler
     }
     
     func viewDidLoad() {
@@ -25,8 +27,10 @@ class SplashPresenter: SplashPresenterProtocol {
                 self?.view?.showMessage("Terra load failed!")
                 return
             }
-//            TerraPaymentUI.configureWith(app: terraApp)
-            self?.view?.dismiss()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self?.view?.dismiss()
+                self?.dismissHandler?()
+            }
         }
     }
 }
